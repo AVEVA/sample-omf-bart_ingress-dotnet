@@ -46,6 +46,11 @@ jobs:
           filePath: /BartIngress
 
       - task: DotNetCoreCLI@2
+        displayName: 'Nuget restore'
+        inputs:
+          command: restore
+
+      - task: DotNetCoreCLI@2
         displayName: 'Run tests'
         inputs:
           command: test
@@ -57,6 +62,11 @@ jobs:
       name: 00-OSIManaged-Containers
       demands: Agent.OS -equals Windows_NT
     steps:
+      - task: DotNetCoreCLI@2
+        displayName: 'Nuget restore'
+        inputs:
+          command: restore
+
       - task: DotNetCoreCLI@2
         displayName: 'Build'
         inputs:
