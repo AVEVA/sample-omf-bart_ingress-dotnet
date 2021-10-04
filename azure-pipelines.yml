@@ -60,7 +60,7 @@ jobs:
     steps:
       - template: '/miscellaneous/build_templates/appsettings.yml@templates'
         parameters:
-          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret, PIWebAPI, Username, Password'
+          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret, PIWebAPI, Username, Password, BartApiKey'
 
       - task: DotNetCoreCLI@2
         displayName: 'Nuget restore'
