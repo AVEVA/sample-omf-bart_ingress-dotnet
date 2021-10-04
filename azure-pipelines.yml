@@ -55,6 +55,8 @@ jobs:
         value: true
       - name: SendToPi
         value: true
+      - name: ValidateEndpointCertificate
+        value: false
     steps:
       - template: '/miscellaneous/build_templates/appsettings.yml@templates'
         parameters:
