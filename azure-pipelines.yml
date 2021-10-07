@@ -38,12 +38,29 @@ jobs:
     pool:
       name: 00-OSIManaged-Test
       demands: COMPUTERNAME -equals $(buildAgent)
+    variables:
+      - name: OcsTenantId
+        value: $(TenantId)
+      - name: OcsNamespaceId
+        value: $(NamespaceId)
+      - name: OcsClientId
+        value: $(ClientId)
+      - name: OcsClientSecret
+        value: $(ClientSecret)
+      - name: PiWebApiUri
+        value: $(PIWebAPI)
+      - name: SendToOcs
+        value: true
+      - name: SendToEds
+        value: true
+      - name: SendToPi
+        value: true
+      - name: ValidateEndpointCertificate
+        value: false
     steps:
-      - template: '/miscellaneous/build_templates/config.yml@templates'
+      - template: '/miscellaneous/build_templates/appsettings.yml@templates'
         parameters:
-          fileOriginal: $(CredFile)
-          fileLibrary: $(CredFileLibrary)
-          filePath: /BartIngress
+          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret, PIWebAPI, Username, Password, BartApiKey'
 
       - task: DotNetCoreCLI@2
         displayName: 'Nuget restore'
