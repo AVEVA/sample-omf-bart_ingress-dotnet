@@ -1,6 +1,6 @@
 ﻿# BART API OMF Ingress DotNet Sample
 
-**Version:** 1.0.20
+**Version:** 1.0.21
 
 [![Build Status](https://dev.azure.com/osieng/engineering/_apis/build/status/product-readiness/OMF/osisoft.sample-omf-bart_ingress-dotnet?repoName=osisoft%2Fsample-omf-bart_ingress-dotnet&branchName=main)](https://dev.azure.com/osieng/engineering/_build/latest?definitionId=2633&repoName=osisoft%2Fsample-omf-bart_ingress-dotnet&branchName=main)
 
