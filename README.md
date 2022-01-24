@@ -34,7 +34,7 @@ If sending to AVEVA Data Hub, set `SendToAdh` to true.
 
 1. `AdhUri` can usually be left as default, but should be the host specified at the beginning of the URL in the [ADH API Console](https://datahub.connect.aveva.com/apiconsole)
 1. `AdhTenantId` should be the ID that comes after `/Tenants/` in the same URL
-1. `AdhNamespaceId` should be the name of the ADH [Namespace](https://datahub.connect.aveva.com/namespaces) to receive the data
+1. `AdhNamespaceId` should be the name of the ADH Namespace to receive the data
 1. `AdhClientId` should be the ID of a [Client Credentials Client](https://datahub.connect.aveva.com/clients). This client will need to have an OMF Connection configured to the specified Namespace in order to successfully send data. To configure one, pick "OMF" from the "Type" dropdown in the [Connections](https://datahub.connect.aveva.com/connections) page.
 1. `AdhClientSecret` should be the secret from the Client Credentials Client that was specified
 
