@@ -10,15 +10,15 @@ using OSIsoft.Omf;
 namespace BartIngress
 {
     /// <summary>
-    /// Manages sending OMF data to the OCS, EDS, and/or PI Web API OMF endpoints
+    /// Manages sending OMF data to the ADH, EDS, and/or PI Web API OMF endpoints
     /// </summary>
     public class OmfServices : IDisposable
     {
         private OmfMessage _typeDeleteMessage;
         private OmfMessage _containerDeleteMessage;
 
-        private AuthenticationHandler OcsAuthenticationHandler { get; set; }
-        private HttpClient OcsHttpClient { get; set; }
+        private AuthenticationHandler AdhAuthenticationHandler { get; set; }
+        private HttpClient AdhHttpClient { get; set; }
         private HttpClient EdsHttpClient { get; set; }
         private HttpClientHandler PiHttpClientHandler { get; set; }
         private HttpClient PiHttpClient { get; set; }
@@ -30,23 +30,23 @@ namespace BartIngress
         }
 
         /// <summary>
-        /// Configure OCS OMF Ingress Service
+        /// Configure ADH OMF Ingress Service
         /// </summary>
-        /// <param name="ocsUri">OSIsoft Cloud Services OMF Endpoint URI</param>
-        /// <param name="tenantId">OSIsoft Cloud Services Tenant ID</param>
-        /// <param name="namespaceId">OSIsoft Cloud Services Namespace ID</param>
-        /// <param name="clientId">OSIsoft Cloud Services Client ID</param>
-        /// <param name="clientSecret">OSIsoft Cloud Services Client Secret</param>
-        internal void ConfigureOcsOmfIngress(Uri ocsUri, string tenantId, string namespaceId, string clientId, string clientSecret)
+        /// <param name="adhUri">AVEVA Data Hub OMF Endpoint URI</param>
+        /// <param name="tenantId">AVEVA Data Hub Tenant ID</param>
+        /// <param name="namespaceId">AVEVA Data Hub Namespace ID</param>
+        /// <param name="clientId">AVEVA Data Hub Client ID</param>
+        /// <param name="clientSecret">AVEVA Data Hub Client Secret</param>
+        internal void ConfigureAdhOmfIngress(Uri adhUri, string tenantId, string namespaceId, string clientId, string clientSecret)
         {
-            OcsAuthenticationHandler = new AuthenticationHandler(ocsUri, clientId, clientSecret)
+            AdhAuthenticationHandler = new AuthenticationHandler(adhUri, clientId, clientSecret)
             {
                 InnerHandler = new HttpClientHandler(),
             };
 
-            OcsHttpClient = new HttpClient(OcsAuthenticationHandler)
+            AdhHttpClient = new HttpClient(AdhAuthenticationHandler)
             {
-                BaseAddress = new Uri(ocsUri.AbsoluteUri + $"api/v1/tenants/{tenantId}/namespaces/{namespaceId}/omf"),
+                BaseAddress = new Uri(adhUri.AbsoluteUri + $"api/v1/tenants/{tenantId}/namespaces/{namespaceId}/omf"),
             };
         }
 
@@ -144,9 +144,9 @@ namespace BartIngress
         {
             var serializedOmfMessage = OmfMessageSerializer.Serialize(omfMessage);
 
-            if (OcsHttpClient != null)
+            if (AdhHttpClient != null)
             {
-                _ = SendOmfMessageAsync(serializedOmfMessage, OcsHttpClient).Result;
+                _ = SendOmfMessageAsync(serializedOmfMessage, AdhHttpClient).Result;
             }
 
             if (EdsHttpClient != null)
@@ -168,10 +168,10 @@ namespace BartIngress
             var serializedTypeDelete = OmfMessageSerializer.Serialize(_typeDeleteMessage);
             var serializedContainerDelete = OmfMessageSerializer.Serialize(_containerDeleteMessage);
 
-            if (OcsHttpClient != null)
+            if (AdhHttpClient != null)
             {
-                _ = SendOmfMessageAsync(serializedContainerDelete, OcsHttpClient).Result;
-                _ = SendOmfMessageAsync(serializedTypeDelete, OcsHttpClient).Result;
+                _ = SendOmfMessageAsync(serializedContainerDelete, AdhHttpClient).Result;
+                _ = SendOmfMessageAsync(serializedTypeDelete, AdhHttpClient).Result;
             }
 
             if (EdsHttpClient != null)
@@ -191,14 +191,14 @@ namespace BartIngress
         {
             if (includeManaged)
             {
-                if (OcsAuthenticationHandler != null)
+                if (AdhAuthenticationHandler != null)
                 {
-                    OcsAuthenticationHandler.Dispose();
+                    AdhAuthenticationHandler.Dispose();
                 }
 
-                if (OcsHttpClient != null)
+                if (AdhHttpClient != null)
                 {
-                    OcsHttpClient.Dispose();
+                    AdhHttpClient.Dispose();
                 }
             }
         }

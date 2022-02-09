@@ -43,17 +43,19 @@ jobs:
       name: 00-OSIManaged-Test
       demands: sku2 -equals VSBuildTools.v16.11.7plusAndEDS
     variables:
-      - name: OcsTenantId
+      - name: AdhTenantId
         value: $(TenantId)
-      - name: OcsNamespaceId
+      - name: AdhNamespaceId
         value: $(NamespaceId)
-      - name: OcsClientId
+      - name: AdhClientId
         value: $(ClientId)
-      - name: OcsClientSecret
+      - name: AdhClientSecret
         value: $(ClientSecret)
       - name: PiWebApiUri
         value: $(PIWebAPI)
-      - name: SendToOcs
+      - name: AdhUri
+        value: $(Resource)
+      - name: SendToAdh
         value: true
       - name: SendToEds
         value: true
@@ -64,7 +66,7 @@ jobs:
     steps:
       - template: '/miscellaneous/build_templates/appsettings.yml@templates'
         parameters:
-          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret, PIWebAPI, Username, Password, BartApiKey'
+          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret, PIWebAPI, Username, Password, BartApiKey, Resource'
 
       - task: DotNetCoreCLI@2
         displayName: 'Nuget restore'
