@@ -9,7 +9,7 @@ namespace BartIngress
 {
     public static class Program
     {
-        private static readonly object _timerLock = new object();
+        private static readonly object _timerLock = new ();
         private static Timer _timer;
 
         public static AppSettings Settings { get; set; }
@@ -52,8 +52,8 @@ namespace BartIngress
             OmfServices.SendOmfType(typeof(BartStationEtd));
 
             // Send OMF Container Message
-            var data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
-            var typeId = ClrToOmfTypeConverter.Convert(typeof(BartStationEtd)).Id;
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<BartStationEtd>> data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
+            string typeId = ClrToOmfTypeConverter.Convert(typeof(BartStationEtd)).Id;
             OmfServices.SendOmfContainersForData(data, typeId);
         }
 
@@ -62,7 +62,7 @@ namespace BartIngress
         /// </summary>
         public static void RunIngress()
         {
-            var data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<BartStationEtd>> data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
             OmfServices.SendOmfData(data);
             Console.WriteLine($"{DateTime.Now}: Sent value for {data.Keys.Count} stream{(data.Keys.Count > 1 ? "s" : string.Empty)}");
         }
@@ -80,7 +80,7 @@ namespace BartIngress
         /// </summary>
         private static void TimerTask(object timerState)
         {
-            var hasLock = false;
+            bool hasLock = false;
 
             try
             {

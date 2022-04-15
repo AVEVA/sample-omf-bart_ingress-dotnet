@@ -28,7 +28,7 @@ namespace BartIngress
             }
 
             TimeStamp = timeStamp;
-            var validMinutes = int.TryParse((string)data["minutes"], out int minutes);
+            bool validMinutes = int.TryParse((string)data["minutes"], out int minutes);
             Minutes = validMinutes ? minutes : 0;
             Platform = (int)data["platform"];
             Direction = (string)data["direction"];

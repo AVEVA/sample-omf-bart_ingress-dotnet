@@ -90,7 +90,7 @@ namespace BartIngress
 
             PiHttpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
             PiHttpClient.BaseAddress = new Uri(piUri.AbsoluteUri + $"/omf");
-            var byteArray = Encoding.ASCII.GetBytes($"{username}:{password}");
+            byte[] byteArray = Encoding.ASCII.GetBytes($"{username}:{password}");
             PiHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
@@ -100,7 +100,7 @@ namespace BartIngress
         /// <param name="type">OMF type to be sent</param>
         internal void SendOmfType(Type type)
         {
-            var msg = OmfMessageCreator.CreateTypeMessage(type);
+            OmfTypeMessage msg = OmfMessageCreator.CreateTypeMessage(type);
             SendOmfMessage(msg);
             msg.ActionType = ActionType.Delete;
             _typeDeleteMessage = msg;
@@ -114,13 +114,13 @@ namespace BartIngress
         /// <param name="typeId">TypeID of the OMF type</param>
         internal void SendOmfContainersForData<T>(Dictionary<string, T> data, string typeId)
         {
-            var containers = new List<OmfContainer>();
-            foreach (var streamId in data.Keys)
+            List<OmfContainer> containers = new ();
+            foreach (string streamId in data.Keys)
             {
                 containers.Add(new OmfContainer(streamId, typeId));
             }
 
-            var msg = new OmfContainerMessage(containers);
+            OmfContainerMessage msg = new (containers);
             SendOmfMessage(msg);
             msg.ActionType = ActionType.Delete;
             _containerDeleteMessage = msg;
@@ -142,7 +142,7 @@ namespace BartIngress
         /// <param name="omfMessage">The OMF message to send</param>
         internal void SendOmfMessage(OmfMessage omfMessage)
         {
-            var serializedOmfMessage = OmfMessageSerializer.Serialize(omfMessage);
+            SerializedOmfMessage serializedOmfMessage = OmfMessageSerializer.Serialize(omfMessage);
 
             if (AdhHttpClient != null)
             {
@@ -165,8 +165,8 @@ namespace BartIngress
         /// </summary>
         internal void CleanupOmf()
         {
-            var serializedTypeDelete = OmfMessageSerializer.Serialize(_typeDeleteMessage);
-            var serializedContainerDelete = OmfMessageSerializer.Serialize(_containerDeleteMessage);
+            SerializedOmfMessage serializedTypeDelete = OmfMessageSerializer.Serialize(_typeDeleteMessage);
+            SerializedOmfMessage serializedContainerDelete = OmfMessageSerializer.Serialize(_containerDeleteMessage);
 
             if (AdhHttpClient != null)
             {
@@ -211,19 +211,19 @@ namespace BartIngress
         /// <returns>A task returning the response of the HTTP request</returns>
         private static async Task<string> SendOmfMessageAsync(SerializedOmfMessage omfMessage, HttpClient httpClient)
         {
-            using var request = new HttpRequestMessage()
+            using HttpRequestMessage request = new ()
             {
                 Method = HttpMethod.Post,
                 Content = new ByteArrayContent(omfMessage.BodyBytes),
             };
 
-            foreach (var omfHeader in omfMessage.Headers)
+            foreach (OmfHeader omfHeader in omfMessage.Headers)
             {
                 request.Headers.Add(omfHeader.Name, omfHeader.Value);
             }
 
-            var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-            var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+            string responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 throw new Exception($"Error sending OMF to endpoint at {httpClient.BaseAddress}. Response code: {response.StatusCode} Response: {responseString}");
             return responseString;
