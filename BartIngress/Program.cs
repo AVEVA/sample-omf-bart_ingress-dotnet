@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Newtonsoft.Json;
@@ -52,7 +53,7 @@ namespace BartIngress
             OmfServices.SendOmfType(typeof(BartStationEtd));
 
             // Send OMF Container Message
-            System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<BartStationEtd>> data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
+            Dictionary<string, IEnumerable<BartStationEtd>> data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
             string typeId = ClrToOmfTypeConverter.Convert(typeof(BartStationEtd)).Id;
             OmfServices.SendOmfContainersForData(data, typeId);
         }
@@ -62,7 +63,7 @@ namespace BartIngress
         /// </summary>
         public static void RunIngress()
         {
-            System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<BartStationEtd>> data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
+            Dictionary<string, IEnumerable<BartStationEtd>> data = BartApi.GetRealTimeEstimates(Settings.BartApiKey, Settings.BartApiOrig, Settings.BartApiDest);
             OmfServices.SendOmfData(data);
             Console.WriteLine($"{DateTime.Now}: Sent value for {data.Keys.Count} stream{(data.Keys.Count > 1 ? "s" : string.Empty)}");
         }
