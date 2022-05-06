@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -10,6 +10,8 @@ namespace BartIngress
 {
     public static class BartApi
     {
+        private static readonly HttpClient _client = new ();
+
         /// <summary>
         /// Gets and parses the current data from the BART ETD (Estimated Time of Departure) API
         /// </summary>
@@ -55,11 +57,23 @@ namespace BartIngress
         private static string HttpGet(string key, string orig = "all")
         {
             Uri uri = new ($"https://api.bart.gov/api/etd.aspx?cmd=etd&orig={orig}&key={key}&json=y");
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            using Stream stream = response.GetResponseStream();
-            using StreamReader reader = new (stream);
-            return reader.ReadToEnd();
+            using HttpRequestMessage request = new (HttpMethod.Get, uri);
+
+            return Send(request).Result;
+        }
+
+        /// <summary>
+        /// Send message using HttpRequestMessage
+        /// </summary>
+        private static async Task<string> Send(HttpRequestMessage request)
+        {
+            HttpResponseMessage response = await _client.SendAsync(request).ConfigureAwait(false);
+
+            string responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Error sending OMF response code:{response.StatusCode}.  Response {responseString}");
+            return responseString;
         }
     }
 }
