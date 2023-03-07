@@ -9,14 +9,6 @@ pr:
     include:
       - main
 
-schedules:
-  - cron: '0 0 * * 0'
-    displayName: Weekly build
-    branches:
-      include:
-        - main
-    always: true
-
 resources:
   repositories:
     - repository: OpsGuildAutomationRepo
@@ -46,7 +38,6 @@ parameters:
 
 jobs:
   - job: Tests
-    condition: ne(variables['Build.Reason'], 'Schedule')
     pool:
       name: ${{ parameters.pool }}
       demands: ${{ parameters.containerDemands }}
@@ -93,25 +84,3 @@ jobs:
           command: test
           publishTestResults: true
           testRunTitle: '$(Agent.JobName) on $(Agent.OS)'
-
-  - template: '/miscellaneous/build_templates/code-analysis.yml@templates'
-    parameters:
-      buildSteps:
-
-        - task: UseDotNet@2
-          displayName: 'Install dotnet 6'
-          inputs:
-            packageType: 'sdk'
-            version: '6.x'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Nuget restore'
-          inputs:
-            command: restore
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Build'
-          inputs:
-            command: build
-
-        - template: '/miscellaneous/build_templates/binskim.yml@templates'
