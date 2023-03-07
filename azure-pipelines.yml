@@ -26,8 +26,6 @@ variables:
     value: appsettings.json
   - name: CredFileLibrary
     value: product-readiness.bartingress_dotnet.json
-  - name: analysisProject
-    value: BartIngress_DotNet
 
 parameters:
   - name: pool
