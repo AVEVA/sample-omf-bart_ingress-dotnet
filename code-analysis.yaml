@@ -27,6 +27,10 @@ resources:
       type: github
       name: osisoft/OSI-Samples
       endpoint: osisoft/OSI-Samples
+      
+variables:
+  - name: analysisProject
+    value: BartIngress_DotNet
 
 jobs:
   - template: '/miscellaneous/build_templates/code-analysis.yml@templates'
