@@ -1,7 +1,4 @@
-﻿# BART API OMF Ingress DotNet Sample
-
-| :loudspeaker: **Notice**: Samples have been updated to reflect that they work on AVEVA Data Hub. The samples also work on OSIsoft Cloud Services unless otherwise noted. |
-| -----------------------------------------------------------------------------------------------|  
+# BART API OMF Ingress DotNet Sample
 
 **Version:** 1.2.6
 
