@@ -26,37 +26,37 @@ namespace BartIngress
 
         #endregion
 
-        #region AVEVA Data Hub Settings
+        #region CONNECT data services Settings
 
         /// <summary>
-        /// Specifies whether this application should send to AVEVA Data Hub
+        /// Specifies whether this application should send to CONNECT data services
         /// </summary>
-        public bool SendToAdh { get; set; }
+        public bool SendToCds { get; set; }
 
         /// <summary>
-        /// AVEVA Data Hub OMF Endpoint URI
+        /// CONNECT data services OMF Endpoint URI
         /// </summary>
-        public Uri AdhUri { get; set; }
+        public Uri CdsUri { get; set; }
 
         /// <summary>
-        /// AVEVA Data Hub Tenant ID
+        /// CONNECT data services Tenant ID
         /// </summary>
-        public string AdhTenantId { get; set; }
+        public string CdsTenantId { get; set; }
 
         /// <summary>
-        /// AVEVA Data Hub Namespace ID
+        /// CONNECT data services Namespace ID
         /// </summary>
-        public string AdhNamespaceId { get; set; }
+        public string CdsNamespaceId { get; set; }
 
         /// <summary>
-        /// AVEVA Data Hub Client ID
+        /// CONNECT data services Client ID
         /// </summary>
-        public string AdhClientId { get; set; }
+        public string CdsClientId { get; set; }
 
         /// <summary>
-        /// AVEVA Data Hub Client Secret
+        /// CONNECT data services Client Secret
         /// </summary>
-        public string AdhClientSecret { get; set; }
+        public string CdsClientSecret { get; set; }
 
         #endregion
 
