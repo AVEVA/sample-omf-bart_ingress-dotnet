@@ -10,15 +10,15 @@ using OSIsoft.Omf;
 namespace BartIngress
 {
     /// <summary>
-    /// Manages sending OMF data to the ADH, EDS, and/or PI Web API OMF endpoints
+    /// Manages sending OMF data to the Cds, EDS, and/or PI Web API OMF endpoints
     /// </summary>
     public class OmfServices : IDisposable
     {
         private OmfMessage _typeDeleteMessage;
         private OmfMessage _containerDeleteMessage;
 
-        private AuthenticationHandler AdhAuthenticationHandler { get; set; }
-        private HttpClient AdhHttpClient { get; set; }
+        private AuthenticationHandler CdsAuthenticationHandler { get; set; }
+        private HttpClient CdsHttpClient { get; set; }
         private HttpClient EdsHttpClient { get; set; }
         private HttpClientHandler PiHttpClientHandler { get; set; }
         private HttpClient PiHttpClient { get; set; }
@@ -30,23 +30,23 @@ namespace BartIngress
         }
 
         /// <summary>
-        /// Configure ADH OMF Ingress Service
+        /// Configure Cds OMF Ingress Service
         /// </summary>
-        /// <param name="adhUri">AVEVA Data Hub OMF Endpoint URI</param>
-        /// <param name="tenantId">AVEVA Data Hub Tenant ID</param>
-        /// <param name="namespaceId">AVEVA Data Hub Namespace ID</param>
-        /// <param name="clientId">AVEVA Data Hub Client ID</param>
-        /// <param name="clientSecret">AVEVA Data Hub Client Secret</param>
-        internal void ConfigureAdhOmfIngress(Uri adhUri, string tenantId, string namespaceId, string clientId, string clientSecret)
+        /// <param name="CdsUri">CONNECT data services OMF Endpoint URI</param>
+        /// <param name="tenantId">CONNECT data services Tenant ID</param>
+        /// <param name="namespaceId">CONNECT data services Namespace ID</param>
+        /// <param name="clientId">CONNECT data services Client ID</param>
+        /// <param name="clientSecret">CONNECT data services Client Secret</param>
+        internal void ConfigureCdsOmfIngress(Uri CdsUri, string tenantId, string namespaceId, string clientId, string clientSecret)
         {
-            AdhAuthenticationHandler = new AuthenticationHandler(adhUri, clientId, clientSecret)
+            CdsAuthenticationHandler = new AuthenticationHandler(CdsUri, clientId, clientSecret)
             {
                 InnerHandler = new HttpClientHandler(),
             };
 
-            AdhHttpClient = new HttpClient(AdhAuthenticationHandler)
+            CdsHttpClient = new HttpClient(CdsAuthenticationHandler)
             {
-                BaseAddress = new Uri(adhUri.AbsoluteUri + $"api/v1/tenants/{tenantId}/namespaces/{namespaceId}/omf"),
+                BaseAddress = new Uri(CdsUri.AbsoluteUri + $"api/v1/tenants/{tenantId}/namespaces/{namespaceId}/omf"),
             };
         }
 
@@ -144,9 +144,9 @@ namespace BartIngress
         {
             SerializedOmfMessage serializedOmfMessage = OmfMessageSerializer.Serialize(omfMessage);
 
-            if (AdhHttpClient != null)
+            if (CdsHttpClient != null)
             {
-                _ = SendOmfMessageAsync(serializedOmfMessage, AdhHttpClient).Result;
+                _ = SendOmfMessageAsync(serializedOmfMessage, CdsHttpClient).Result;
             }
 
             if (EdsHttpClient != null)
@@ -168,10 +168,10 @@ namespace BartIngress
             SerializedOmfMessage serializedTypeDelete = OmfMessageSerializer.Serialize(_typeDeleteMessage);
             SerializedOmfMessage serializedContainerDelete = OmfMessageSerializer.Serialize(_containerDeleteMessage);
 
-            if (AdhHttpClient != null)
+            if (CdsHttpClient != null)
             {
-                _ = SendOmfMessageAsync(serializedContainerDelete, AdhHttpClient).Result;
-                _ = SendOmfMessageAsync(serializedTypeDelete, AdhHttpClient).Result;
+                _ = SendOmfMessageAsync(serializedContainerDelete, CdsHttpClient).Result;
+                _ = SendOmfMessageAsync(serializedTypeDelete, CdsHttpClient).Result;
             }
 
             if (EdsHttpClient != null)
@@ -191,14 +191,14 @@ namespace BartIngress
         {
             if (includeManaged)
             {
-                if (AdhAuthenticationHandler != null)
+                if (CdsAuthenticationHandler != null)
                 {
-                    AdhAuthenticationHandler.Dispose();
+                    CdsAuthenticationHandler.Dispose();
                 }
 
-                if (AdhHttpClient != null)
+                if (CdsHttpClient != null)
                 {
-                    AdhHttpClient.Dispose();
+                    CdsHttpClient.Dispose();
                 }
             }
         }

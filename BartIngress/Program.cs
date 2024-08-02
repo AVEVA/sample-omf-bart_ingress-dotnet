@@ -34,9 +34,9 @@ namespace BartIngress
 
             OmfServices = new OmfServices();
 
-            if (Settings.SendToAdh)
+            if (Settings.SendToCds)
             {
-                OmfServices.ConfigureAdhOmfIngress(Settings.AdhUri, Settings.AdhTenantId, Settings.AdhNamespaceId, Settings.AdhClientId, Settings.AdhClientSecret);
+                OmfServices.ConfigureCdsOmfIngress(Settings.CdsUri, Settings.CdsTenantId, Settings.CdsNamespaceId, Settings.CdsClientId, Settings.CdsClientSecret);
             }
 
             if (Settings.SendToEds)
