@@ -1,12 +1,12 @@
 # BART API OMF Ingress DotNet Sample
 
-**Version:** 1.2.7
+**Version:** 1.2.8
 
 [![Build Status](https://dev.azure.com/AVEVA-VSTS/Cloud%20Platform/_apis/build/status%2Fproduct-readiness%2FOMF%2FAVEVA.sample-omf-bart_ingress-dotnet?branchName=main)](https://dev.azure.com/AVEVA-VSTS/Cloud%20Platform/_build/latest?definitionId=16158&branchName=main)
 
-This sample uses OSIsoft Message Format to send real time data from the Bay Area Rapid Transit (BART) API to CONNECT data services, Edge Data Store, and/or PI Web API. Once the sample is started, a timer polls the BART API every 10 seconds for the latest real time estimated times of departure, and sends that data to the configured OMF endpoints.
+This sample uses Open Message Format to send real time data from the Bay Area Rapid Transit (BART) API to CONNECT data services, Edge Data Store, and/or PI Web API. Once the sample is started, a timer polls the BART API every 10 seconds for the latest real time estimated times of departure, and sends that data to the configured OMF endpoints.
 
-Developed against DotNet 6.0
+Developed against DotNet 8.0
 
 ## Requirements
 
@@ -23,7 +23,7 @@ The [.NET Core CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/) is refe
    1. The default is to monitor only the San Leandro (`"SANL"`) - Daly City (`"DALY"`) route
    1. A full list of station abbreviations can be found [here](http://api.bart.gov/docs/overview/abbrev.aspx)
 
-### OSIsoft Message Format Endpoints
+### Open Message Format endpoints
 
 Configure desired OMF endpoints to receive the data in `appsettings.json`.
 
@@ -50,7 +50,7 @@ If sending to PI Web API, set `SendToPi` to true.
 1. `Username` and `Password` should be the domain user/password that will be used to perform Basic authentication against PI Web API
 1. `ValidateEndpointCertificate` may be set to false in order to bypass certificate validation when PI Web API is configured to use a self-signed certificate. This will generate a warning; this should only be done for testing with a self-signed PI Web API certificate as it is insecure.
 
-## Running the Sample
+## Running the sample
 
 From the command line, run
 
@@ -61,7 +61,7 @@ dotnet run
 
 If the `appsettings.json` file has been set up, the sample will first send an OMF type message for BART estimated time of departure (ETD) data ([BartStationEtd.cs](./BartIngress/BartStationEtd.cs)) and an OMF container message for the desired routes. Then, every 10 seconds, the sample will collect real time data and send data messages to the configured OMF endpoints, until the sample is stopped.
 
-## Running the Automated Test
+## Running the automated test
 
 To run the automated test, all three OMF endpoint types must be fully configured.
 

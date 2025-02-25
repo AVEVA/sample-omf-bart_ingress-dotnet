@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Newtonsoft.Json;
-using OSIsoft.Omf;
 using OSIsoft.Omf.Converters;
 
 namespace BartIngress
@@ -36,7 +35,7 @@ namespace BartIngress
 
             if (Settings.SendToCds)
             {
-                OmfServices.ConfigureCdsOmfIngress(Settings.CdsUri, Settings.CdsTenantId, Settings.CdsNamespaceId, Settings.CdsClientId, Settings.CdsClientSecret);
+                OmfServices.ConfigureCdsOmfIngress(Settings.Resource, Settings.TenantId, Settings.NamespaceId, Settings.ClientId, Settings.ClientSecret);
             }
 
             if (Settings.SendToEds)

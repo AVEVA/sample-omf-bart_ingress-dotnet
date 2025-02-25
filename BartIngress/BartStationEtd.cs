@@ -22,10 +22,7 @@ namespace BartIngress
         /// <param name="data">The API JSON object representing the value</param>
         public BartStationEtd(DateTime timeStamp, JObject data)
         {
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
+            ArgumentNullException.ThrowIfNull(data);
 
             TimeStamp = timeStamp;
             bool validMinutes = int.TryParse((string)data["minutes"], out int minutes);
