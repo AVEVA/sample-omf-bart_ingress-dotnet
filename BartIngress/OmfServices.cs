@@ -32,21 +32,21 @@ namespace BartIngress
         /// <summary>
         /// Configure Cds OMF Ingress Service
         /// </summary>
-        /// <param name="CdsUri">CONNECT data services OMF Endpoint URI</param>
+        /// <param name="cdsUri">CONNECT data services OMF Endpoint URI</param>
         /// <param name="tenantId">CONNECT data services Tenant ID</param>
         /// <param name="namespaceId">CONNECT data services Namespace ID</param>
         /// <param name="clientId">CONNECT data services Client ID</param>
         /// <param name="clientSecret">CONNECT data services Client Secret</param>
-        internal void ConfigureCdsOmfIngress(Uri CdsUri, string tenantId, string namespaceId, string clientId, string clientSecret)
+        internal void ConfigureCdsOmfIngress(Uri cdsUri, string tenantId, string namespaceId, string clientId, string clientSecret)
         {
-            CdsAuthenticationHandler = new AuthenticationHandler(CdsUri, clientId, clientSecret)
+            CdsAuthenticationHandler = new AuthenticationHandler(cdsUri, clientId, clientSecret)
             {
                 InnerHandler = new HttpClientHandler(),
             };
 
             CdsHttpClient = new HttpClient(CdsAuthenticationHandler)
             {
-                BaseAddress = new Uri(CdsUri.AbsoluteUri + $"api/v1/tenants/{tenantId}/namespaces/{namespaceId}/omf"),
+                BaseAddress = new Uri(cdsUri.AbsoluteUri + $"api/v1/tenants/{tenantId}/namespaces/{namespaceId}/omf"),
             };
         }
 

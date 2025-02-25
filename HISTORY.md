@@ -1,5 +1,10 @@
 # Version History
 
+## 1.2.8 / 2025-02-18
+
+- Update .net version
+- Standardization of appsettings.placeholder.json contents
+
 ## 1.2.7 / 2023-10-13
 
 - Migrate Pipelines
